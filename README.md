@@ -5,3 +5,5 @@
 <p>Para utilizar essa aplicação basta clonar o este repositorio com o comando "git clone https://github.com/raultocantins/bulma_css-socket.io.git" </p>
 <h3>Executando o server</h3>
 <p>Entrando com terminal na pasta do projeto basta digitar o comando npm start e acessar "http://localhost:3000" em seu navegador e verá a interface da aplicação</p>
+<h3>Performance</h3>
+<p>Para melhorar a performance do WebSocket estou utilizando um modulo chamado de uWebSocket que está disponivel https://github.com/uNetworking/uWebSockets.js </p>
