@@ -1,4 +1,4 @@
-# bulma_css-socket.io
+
 <h1>Small chat with bulma_css and socket.io</h1>
 <p>Pequena aplicação voltada para chat no intuinto de conhecimento para uma aplicação maior em desenvolvimento</p>
 <h3>Instalação</h3>
