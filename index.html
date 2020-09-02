@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Webchat com socketIO</title>
+    <!--  importar o client do socketIO-->
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./node_modules/axios/dist/axios.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+   <link rel="stylesheet" href="styles.css">
+</head>
+<body class="has-background-light">
+    <div class="container">               
+        <div class="box has-text-primary ">
+            <h1 id="connections" class="title is-4">            
+            </h1>           
+            <!--  Lista de mensagens -->
+            <div class="mensagens">
+                <ul class="ul" id="messages"></ul>
+            </div>
+            <!--  input com e botão de submit-->
+            <div class="send">
+                <div class="field">
+                    <div class="control">
+                      <input class="input is-primary" type="text" placeholder="Cloud está em apuros!" id="menssagem">
+                    </div>
+                    <div class="buttons">  
+                        <button class="button is-primary" id="enviar_menssagem">Primary</button>
+                    </div>
+                  </div>              
+            </div>
+        </div>
+    </div>   
+    <script>
+        var connec=document.getElementById('connections')
+        // faz com que seja possível enviar mensagens com Enter
+        document.getElementById('menssagem').addEventListener('keypress', function (e) {
+            var key = e.which || e.keyCode;
+            if (key == 13) {
+                enviar_menssagem();
+            }
+        });
+        // inicia o client socketIO
+        var socket = io();
+        // Abre um popup perguntando o nome da pessoa
+        var nome_usuario = prompt("Qual seu nome?");
+        // Lista com alguns nomes do Final Fantasy
+        var ff = [
+            "Cloud Strife",
+            "Sephiroth",
+            "Vincent Valentine",
+            "Zack Fair",
+            "Aerith Gainsborough",
+            "Tifa Lockhart",
+            "Barret Wallace",
+            "Yuffie Kisaragi",
+        ];
+        // Caso usuário não informe um nome será atribuido um nome aleatório da lista
+        if (nome_usuario === null || nome_usuario == "" || nome_usuario == " ") {
+            nome_usuario = ff[Math.floor(Math.random() * ff.length)];
+        }
+        socket.emit('chat message', "Bem vindo! " + nome_usuario);
+        // adiciona um addEventListener para o botão de submit
+        document.getElementById('enviar_menssagem').addEventListener("click", enviar_menssagem);
+        // cria a função que conecta no websocket e emite a mensagem
+        function enviar_menssagem() {
+            // salva a mensagem como uma string
+            msg = document.getElementById('menssagem').value;
+            if (msg.length > 0) {
+                console.log(msg);
+                // concatena o nome de usuário e a mensagem para enviar ao socketIo
+                socket.emit('chat message', nome_usuario + ": >  " + msg);
+                // reseta o valor do input da mensagem
+                document.getElementById('menssagem').value = "";
+            }
+        }
+        // sempre que receber uma mensagem ela é adicionada a lista
+        socket.on('chat message', function (msg) {
+            // busca o elemento UL
+            let ul = document.getElementById("messages");
+            // cria um elemento LI
+            let li = document.createElement('li');
+            // cria o elemento de quebra de linha
+            let br = document.createElement('br');
+            li.appendChild(document.createTextNode(msg));
+            // adicionar o nome do usuário quebra a linha e adicionar a mensagem à lista de mensagems
+            ul.appendChild(li);
+        });
+        socket.on('connections',(conn)=>{
+            $('#connections').text(`${conn} Conexões`)    
+})
+ </script>
+
+</body>
+
+</html>
